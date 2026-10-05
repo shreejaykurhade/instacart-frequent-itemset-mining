@@ -1,0 +1,8 @@
+pandas>=2.0
+numpy>=1.24
+matplotlib>=3.7
+seaborn>=0.12
+mlxtend>=0.23
+kagglehub>=0.3
+psutil>=5.9
+
