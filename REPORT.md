@@ -68,6 +68,10 @@ Future work should add retailer/store context, availability, price/promotions, s
 
 Instacart provides a credible real-world setting for frequent itemset mining because its documented complementary-product system explicitly uses co-purchasing alongside ML ranking. Apriori clearly demonstrates syllabus fundamentals; FP-Growth is the stronger scalable baseline. The key industrial lesson is layered design: association patterns retrieve interpretable candidates, contextual ML ranks them, operational filters protect the experience, experiments measure causal value, and foundation models expand semantic discovery under traditional relevance controls.
 
+### Experimental results
+
+The verified default run found 707 frequent itemsets with exact agreement between Apriori and FP-Growth. Apriori required 0.437 seconds and FP-Growth 0.343 seconds on the execution machine. Among 699 eligible held-out orders, rule recommendations covered 92.70%. Conditional on coverage, Hit Rate@10 was 34.26%, Precision@10 was 4.54%, and Recall@10 was 9.82%. These are sample-specific offline results, not reported Instacart production metrics or evidence of causal basket growth.
+
 ## 9. References
 
 1. Instacart Docs. “Recommendations.” https://docs.instacart.com/storefront/concepts/recommendations/

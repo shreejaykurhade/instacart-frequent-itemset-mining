@@ -114,6 +114,27 @@ if DATA_DIR is None:
     except Exception as exc:
         print("Automatic Kaggle download unavailable:", exc)
 
+# Public mirror fallback for readers without Kaggle API credentials. These are
+# the same six competition CSVs; Kaggle remains the canonical dataset source.
+if DATA_DIR is None:
+    try:
+        from urllib.request import urlretrieve
+
+        mirror = (
+            "https://huggingface.co/datasets/attik/"
+            "Instacart-Market-Basket-Analysis/resolve/main"
+        )
+        mirror_dir = DATA_ROOT / "instacart"
+        mirror_dir.mkdir(exist_ok=True)
+        for filename in sorted(REQUIRED):
+            destination = mirror_dir / filename
+            if not destination.exists():
+                print("Downloading public mirror:", filename)
+                urlretrieve(f"{mirror}/{filename}", destination)
+        DATA_DIR = locate_csv_dir(mirror_dir)
+    except Exception as exc:
+        print("Public-mirror download unavailable:", exc)
+
 if DATA_DIR is None:
     raise FileNotFoundError(
         "Instacart CSVs not found. Upload/unzip the Kaggle archive under "
@@ -389,7 +410,7 @@ rows = []
 for row in valid_meta.itertuples():
     query = order_products.get(row.previous_order_id, set())
     actual = order_products.get(row.order_id, set())
-    predicted = recommend_for_basket(query, k=TOP_K).product.tolist()
+    predicted = recommend_for_basket(query, k=TOP_K)["product"].tolist()
     if not query or not actual:
         continue
     hits = len(set(predicted) & actual)
