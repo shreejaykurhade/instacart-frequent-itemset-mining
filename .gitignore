@@ -3,5 +3,4 @@ outputs/
 .ipynb_checkpoints/
 __pycache__/
 *.zip
-!instacart-market-basket-analysis-data.zip
 

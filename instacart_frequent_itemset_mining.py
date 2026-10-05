@@ -98,14 +98,13 @@ DATA_ROOT = Path(os.environ.get("INSTACART_DATA_DIR", str(Path.cwd() / "data")))
 DATA_ROOT.mkdir(parents=True, exist_ok=True)
 DATA_DIR = locate_csv_dir(DATA_ROOT)
 
-# The repository carries the complete CSV bundle through Git LFS. In Colab,
-# opening a notebook directly from GitHub does not clone sibling files, so the
-# same bundle is downloaded from the repository's raw-file endpoint.
+# The repository hosts the complete CSV bundle as a GitHub Release asset.
+# This works both for clones and notebooks opened directly in Colab.
 BUNDLE_NAME = "instacart-market-basket-analysis-data.zip"
 BUNDLE_SHA256 = "b0c58b80af5c43bcdebf34909033b740fc312353d2b8aa5f442083c824e8311d"
 BUNDLE_URL = (
     "https://github.com/shreejaykurhade/instacart-frequent-itemset-mining/"
-    f"raw/refs/heads/main/{BUNDLE_NAME}"
+    f"releases/download/dataset-v1/{BUNDLE_NAME}"
 )
 
 if DATA_DIR is None:

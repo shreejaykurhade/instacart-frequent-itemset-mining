@@ -6,7 +6,7 @@ An industry-survey and reproducible Google Colab project for **Honours – Advan
 
 ## What the notebook does
 
-1. Loads the bundled **Instacart Market Basket Analysis** data (Git LFS for clones; automatic GitHub download in Colab), with Kaggle and public-mirror fallbacks.
+1. Downloads the complete **Instacart Market Basket Analysis** data from this repository's GitHub Release, with Kaggle and public-mirror fallbacks.
 2. Validates and joins orders, products, aisles, and order-product records.
 3. Explores basket size, product/aisle frequency, reorder behaviour, and temporal patterns.
 4. Builds a bounded, sparse transaction matrix so it can run in Colab without exhausting RAM.
@@ -25,13 +25,12 @@ An industry-survey and reproducible Google Colab project for **Honours – Advan
 ├── README.md
 ├── requirements.txt
 ├── LICENSE
-├── instacart-market-basket-analysis-data.zip # all six CSVs, stored via Git LFS
 └── .gitignore
 ```
 
 ## Run in Google Colab
 
-Open `Instacart_Frequent_Itemset_Mining.ipynb` in Colab and choose **Runtime → Run all**. The notebook downloads the repository's dataset ZIP, verifies its SHA-256 checksum, extracts it to a working-directory `data/` folder, and runs without a Kaggle account. The default configuration is intentionally bounded:
+Open `Instacart_Frequent_Itemset_Mining.ipynb` in Colab and choose **Runtime → Run all**. The notebook downloads [the repository's dataset ZIP](https://github.com/shreejaykurhade/instacart-frequent-itemset-mining/releases/tag/dataset-v1), verifies its SHA-256 checksum, extracts it to a working-directory `data/` folder, and runs without a Kaggle account. The default configuration is intentionally bounded:
 
 ```python
 MAX_ORDERS = 30_000
@@ -40,7 +39,7 @@ MIN_SUPPORT = 0.003
 MAX_ITEMSET_LEN = 3
 ```
 
-The 196 MB ZIP is stored with Git LFS because ordinary GitHub files have a 100 MB limit. Install Git LFS before cloning if running locally; Colab's direct notebook route downloads the ZIP automatically. If the bundle is unavailable, the notebook tries Kaggle and then the public Hugging Face mirror. The source dataset is the [Instacart Kaggle competition](https://www.kaggle.com/competitions/instacart-market-basket-analysis/data); follow its terms for any redistribution or use.
+The 196 MB ZIP is stored as a GitHub Release asset because ordinary repository files have a 100 MB limit. It includes all six CSVs. The notebook downloads it automatically in Colab or a fresh clone. If the bundle is unavailable, the notebook tries Kaggle and then the public Hugging Face mirror. The source dataset is the [Instacart Kaggle competition](https://www.kaggle.com/competitions/instacart-market-basket-analysis/data); follow its terms for any redistribution or use.
 
 For a quick local run:
 
