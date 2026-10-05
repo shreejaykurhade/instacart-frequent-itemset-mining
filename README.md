@@ -6,7 +6,7 @@ An industry-survey and reproducible Google Colab project for **Honours – Advan
 
 ## What the notebook does
 
-1. Downloads the public **Instacart Market Basket Analysis** data from Kaggle (or accepts manually uploaded CSV files).
+1. Loads the bundled **Instacart Market Basket Analysis** data (Git LFS for clones; automatic GitHub download in Colab), with Kaggle and public-mirror fallbacks.
 2. Validates and joins orders, products, aisles, and order-product records.
 3. Explores basket size, product/aisle frequency, reorder behaviour, and temporal patterns.
 4. Builds a bounded, sparse transaction matrix so it can run in Colab without exhausting RAM.
@@ -25,12 +25,13 @@ An industry-survey and reproducible Google Colab project for **Honours – Advan
 ├── README.md
 ├── requirements.txt
 ├── LICENSE
+├── instacart-market-basket-analysis-data.zip # all six CSVs, stored via Git LFS
 └── .gitignore
 ```
 
 ## Run in Google Colab
 
-Open `Instacart_Frequent_Itemset_Mining.ipynb` in Colab and choose **Runtime → Run all**. The default configuration is intentionally bounded:
+Open `Instacart_Frequent_Itemset_Mining.ipynb` in Colab and choose **Runtime → Run all**. The notebook downloads the repository's dataset ZIP, verifies its SHA-256 checksum, extracts it to a working-directory `data/` folder, and runs without a Kaggle account. The default configuration is intentionally bounded:
 
 ```python
 MAX_ORDERS = 30_000
@@ -39,7 +40,7 @@ MIN_SUPPORT = 0.003
 MAX_ITEMSET_LEN = 3
 ```
 
-For data download, the notebook first tries `kagglehub.competition_download(...)` and then a public Hugging Face mirror of the same six competition CSVs. A manual upload remains possible. Dataset files are deliberately excluded from Git because their distribution is governed by the original dataset/competition terms.
+The 196 MB ZIP is stored with Git LFS because ordinary GitHub files have a 100 MB limit. Install Git LFS before cloning if running locally; Colab's direct notebook route downloads the ZIP automatically. If the bundle is unavailable, the notebook tries Kaggle and then the public Hugging Face mirror. The source dataset is the [Instacart Kaggle competition](https://www.kaggle.com/competitions/instacart-market-basket-analysis/data); follow its terms for any redistribution or use.
 
 For a quick local run:
 

@@ -34,7 +34,9 @@ import random
 import time
 import warnings
 import zipfile
+import hashlib
 from pathlib import Path
+from urllib.request import urlretrieve
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -92,9 +94,39 @@ def locate_csv_dir(root: Path) -> Path | None:
     return None
 
 
-DATA_ROOT = Path(os.environ.get("INSTACART_DATA_DIR", "/content/data"))
+DATA_ROOT = Path(os.environ.get("INSTACART_DATA_DIR", str(Path.cwd() / "data")))
 DATA_ROOT.mkdir(parents=True, exist_ok=True)
 DATA_DIR = locate_csv_dir(DATA_ROOT)
+
+# The repository carries the complete CSV bundle through Git LFS. In Colab,
+# opening a notebook directly from GitHub does not clone sibling files, so the
+# same bundle is downloaded from the repository's raw-file endpoint.
+BUNDLE_NAME = "instacart-market-basket-analysis-data.zip"
+BUNDLE_SHA256 = "b0c58b80af5c43bcdebf34909033b740fc312353d2b8aa5f442083c824e8311d"
+BUNDLE_URL = (
+    "https://github.com/shreejaykurhade/instacart-frequent-itemset-mining/"
+    f"raw/refs/heads/main/{BUNDLE_NAME}"
+)
+
+if DATA_DIR is None:
+    try:
+        bundle = Path.cwd() / BUNDLE_NAME
+        if not bundle.exists():
+            bundle = DATA_ROOT / BUNDLE_NAME
+            print("Downloading dataset bundle from GitHub:", BUNDLE_URL)
+            urlretrieve(BUNDLE_URL, bundle)
+        with bundle.open("rb") as stream:
+            digest = hashlib.file_digest(stream, "sha256").hexdigest()
+        if digest != BUNDLE_SHA256:
+            raise ValueError("Dataset bundle checksum mismatch (or Git LFS pointer downloaded)")
+        with zipfile.ZipFile(bundle) as archive:
+            if set(archive.namelist()) != REQUIRED:
+                raise ValueError("Dataset bundle contains unexpected filenames")
+            archive.extractall(DATA_ROOT)
+        DATA_DIR = locate_csv_dir(DATA_ROOT)
+        print("Dataset bundle verified and extracted")
+    except Exception as exc:
+        print("GitHub dataset bundle unavailable:", exc)
 
 if DATA_DIR is None:
     try:
